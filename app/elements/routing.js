@@ -20,7 +20,6 @@ window.addEventListener('WebComponentsReady', function() {
     app.route = 'contact';
   });
   
-  page.base('/halfmylife');
   // add #! before urls
   page({
     hashbang: true
