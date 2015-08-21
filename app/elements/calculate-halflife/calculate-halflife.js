@@ -3,11 +3,21 @@
 
   Polymer({
     is: 'calculate-halflife',
-
+    ready: function() {
+      this.mydates = [
+        {adate: 'Projectos', pct: '10'},
+        {adate: 'Facturas', pct: '25'},
+        {adate: 'Soporte', pct: '50'}
+      ];
+    },
     properties: {
       message: {
         type: String,
         value: 'calculate-halflife barton'
+      },
+      calculated: {
+        type: Boolean,
+        value: false
       }
     },
     addZeroIfNecessary: function(value) {
@@ -25,46 +35,62 @@
       return dateString;
     },
     calculateHalflife: function(){
-
-      var birthdate = this.getDate(this.$.birthdayMonth.value,
+      this.calculated = false;
+      
+      var birthdateStr = this.getDate(this.$.birthdayMonth.value,
                               this.$.birthdayDay.value,
                               this.$.birthdayYear.value);
-      if (! moment(birthdate, 'YYYY-MM-DD', true).isValid()) {
+      if (! moment(birthdateStr, 'YYYY-MM-DD', true).isValid()) {
         this.message = 'Birthday is not valid.  Please review.';
         document.querySelector('#toastOK').show();
         return;
       }
       
-      var signifdate = this.getDate(this.$.signifMonth.value,
+      var signifdateStr = this.getDate(this.$.signifMonth.value,
                                     this.$.signifDay.value,
                                     this.$.signifYear.value);
-      if (! moment(signifdate, 'YYYY-MM-DD', true).isValid()) {
+      if (! moment(signifdateStr, 'YYYY-MM-DD', true).isValid()) {
         this.message = 'Significant date is not valid.  Please review.';
         document.querySelector('#toastOK').show();
         return;
       }
 
-      var now = moment(new Date());
+      var birth = moment(birthdateStr, 'YYYY-MM-DD', true);
 
-      var birth = moment(birthdate, 'YYYY-MM-DD', true);
-
-      var meet = moment(signifdate, 'YYYY-MM-DD', true);
-
-      var daysFromBirth = now.diff(birth,'days');
-      var daysSinceMeeting = now.diff(meet,'days');
-      var moreThenHalf = (daysFromBirth/2) - daysSinceMeeting;
-
-
-
-      while (moreThenHalf > 0) {
-        now.add(1,'days');
-        daysFromBirth = now.diff(birth,'days');
-        daysSinceMeeting = now.diff(meet,'days');
-        moreThenHalf = (daysFromBirth/2) - daysSinceMeeting;
-      }
+      var meet = moment(signifdateStr, 'YYYY-MM-DD', true);
+      var origMeet = moment(signifdateStr, 'YYYY-MM-DD', true);
       
-      this.message = 'on ' + now.format('dddd, MMMM Do YYYY') + ' I have been alive ' + daysFromBirth + ' and have known you for ' + daysSinceMeeting;
-      document.querySelector('#toastOK').show();
+      var dates = [];
+      
+      while(meet.diff(birth,'years') < 100) {
+        meet.add(1,'days');
+        var daysOldNow = meet.diff(birth,'days');
+        var meetDays = meet.diff(origMeet, 'days');
+
+        var pct = (meetDays/daysOldNow) * 100;
+        
+        if (pct > 0 && (pct % 10 === 0)) {
+          dates.push({adate: meet.format('dddd, MMMM Do YYYY'), pct: pct});
+        } else {
+          pct = Math.floor(pct);
+          if (pct > 0 && ( pct % 10 ===0)) {
+            var found = false;
+            for (var i = 0; i < dates.length; i++) {
+              if (dates[i].pct === pct) {
+                found = true;
+                break;
+              }
+            }
+            
+            if (!found) {
+              dates.push({adate: meet.format('dddd, MMMM Do YYYY'), pct: Math.floor(pct)});
+            }
+          }
+
+        }
+      }//while
+      this.mydates = dates;
+      this.calculated=true;
     }
 
   });

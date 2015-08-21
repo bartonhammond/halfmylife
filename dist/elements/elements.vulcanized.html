@@ -11122,6 +11122,8 @@ is separate from validation, and `allowed-pattern` does not affect how the input
 
 
 
+
+
 <script>!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.page=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process){
   /* globals require, module */
@@ -12058,13 +12060,8 @@ module.exports = Array.isArray || function (arr) {
     app.route = 'home';
   });
 
-  page('/users', function () {
-    app.route = 'users';
-  });
-
-  page('/users/:name', function (data) {
-    app.route = 'user-info';
-    app.params = data.params;
+  page('/license', function () {
+    app.route = 'license';
   });
 
   page('/contact', function () {
@@ -16129,6 +16126,134 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   });
 
 </script>
+<dom-module id="paper-badge" assetpath="../bower_components/paper-badge/">
+  <style>
+    :host {
+      display: block;
+      position: absolute;
+      outline: none;
+    }
+
+    #badge {
+      @apply(--paper-font-common-base);
+      font-weight: 600;
+      font-size: 12px;
+      border-radius: 50%;
+      margin-left: var(--paper-badge-margin-left, 0px);
+      margin-bottom: var(--paper-badge-margin-bottom, 0px);
+      width: var(--paper-badge-width, 22px);
+      height: var(--paper-badge-height, 22px);
+      background-color: var(--paper-badge-background, --accent-color);
+      opacity: var(--paper-badge-opacity, 1.0);
+      color: var(--paper-badge-text-color, white);
+      @apply(--layout);
+      @apply(--layout-center-center);
+
+      @apply(--paper-badge);
+    }
+  </style>
+  <template>
+    <div id="badge">{{label}}</div>
+  </template>
+  <script>
+    Polymer({
+      is: 'paper-badge',
+
+      behaviors: [
+        Polymer.IronResizableBehavior
+      ],
+
+      listeners: {
+        'iron-resize': 'updatePosition'
+      },
+
+      properties: {
+        /**
+         * The id of the element that the badge is anchored to. This element
+         * must be a sibling of the badge.
+         */
+        for: {
+          type: String,
+          observer: '_forChanged'
+        },
+
+        /**
+         * The label displayed in the badge. The label is centered, and ideally
+         * should have very few characters.
+         */
+        label: {
+          type: String
+        }
+      },
+
+      attached: function() {
+        this._updateTarget();
+      },
+
+      _forChanged: function() {
+        // The first time the property is set is before the badge is attached,
+        // which means we're not ready to position it yet.
+        if (!this.isAttached) {
+          return;
+        }
+        this._updateTarget();
+      },
+
+      _updateTarget: function() {
+        this._target = this.target;
+        this.async(this.notifyResize, 1);
+      },
+
+      /**
+       * Returns the target element that this badge is anchored to. It is
+       * either the element given by the `for` attribute, or the immediate parent
+       * of the badge.
+       */
+      get target () {
+        var parentNode = Polymer.dom(this).parentNode;
+        // If the parentNode is a document fragment, then we need to use the host.
+        var ownerRoot = Polymer.dom(this).getOwnerRoot();
+        var target;
+
+        if (this.for) {
+          target = Polymer.dom(ownerRoot).querySelector('#' + this.for);
+        } else {
+          target = parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE ?
+              ownerRoot.host : parentNode;
+        }
+
+        return target;
+      },
+
+      /**
+       * Repositions the badge relative to its anchor element. This is called
+       * automatically when the badge is attached or an `iron-resize` event is
+       * fired (for exmaple if the window has resized, or your target is a
+       * custom element that implements IronResizableBehavior).
+       *
+       * You should call this in all other cases when the achor's position
+       * might have changed (for example, if it's visibility has changed, or
+       * you've manually done a page re-layout).
+       */
+      updatePosition: function() {
+        if (!this._target)
+          return;
+
+        if (!this.offsetParent)
+          return;
+
+        var parentRect = this.offsetParent.getBoundingClientRect();
+        var targetRect = this._target.getBoundingClientRect();
+        var thisRect = this.getBoundingClientRect();
+
+        this.style.left = targetRect.left - parentRect.left +
+            (targetRect.width - thisRect.width / 2) + 'px';
+        this.style.top = targetRect.top - parentRect.top -
+            (thisRect.height / 2) + 'px';
+      }
+    })
+  </script>
+</dom-module>
 <dom-module id="my-greeting" assetpath="my-greeting/">
   <style>
     :host {
@@ -16206,36 +16331,49 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </dom-module>
 <dom-module id="calculate-halflife" assetpath="calculate-halflife/">
   <style is="custom-style">
-   paper-button.colorful {
-      color: #4285f4;
-   }
-   paper-toast {
-      z-index: 9999;
-   }
-   </style>
+    .list {
+    padding-top: 12px;
+    background-color: white;
+    display: inline-block;
+    margin: 12px;
+    @apply(--shadow-elevation-2dp);
+    }
+    .short {
+    padding-top: 12px;
+    }
+    .marginright {
+    margin-right: 25px;
+    }
+    paper-button.colorful {
+    color: #4285f4;
+    }
+    paper-toast {
+    z-index: 9999;
+    }
+  </style>
   <template>
 
     Birthday:
     <div class="horizontal layout">
-      <paper-input id="birthdayMonth" label="Month" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
+      <paper-input id="birthdayMonth" label="Month" value="10" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
       </paper-input>
 
-      <paper-input id="birthdayDay" label="Day" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
+      <paper-input id="birthdayDay" label="Day" value="8" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
       </paper-input>
 
-      <paper-input id="birthdayYear" label="Year" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
+      <paper-input id="birthdayYear" label="Year" value="1954" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
       </paper-input>
     </div>
 
     Significant Date:
     <div class="horizontal layout">
-      <paper-input id="signifMonth" label="Month" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
+      <paper-input id="signifMonth" label="Month" value="12" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
       </paper-input>
 
-      <paper-input id="signifDay" label="Day" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
+      <paper-input id="signifDay" label="Day" value="24" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
       </paper-input>
 
-      <paper-input id="signifYear" label="Year" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
+      <paper-input id="signifYear" label="Year" value="1985" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
       </paper-input>
     </div>
     <div class="horizontal layout">    
@@ -16243,18 +16381,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-toast id="toastOK" text="{{message}}"></paper-toast>
     </div>
 
+    <div hidden="{{!calculated}}">
+      <h4>Important Dates</h4>
+      <div class="list short">
+        <paper-item>
+          <paper-item-body two-line="" class="layout horizontal">
+            <div class="marginright"><strong>%</strong></div>
+            <div><strong>Date</strong></div>
+          </paper-item-body>
+        </paper-item>
 
+        <template is="dom-repeat" items="{{mydates}}">
+          <paper-item>
+            <paper-item-body two-line="" class="layout horizontal">
+              <div class="marginright">{{item.pct}}</div>
+              <div>{{item.adate}}</div>
+            </paper-item-body>
+          </paper-item>
+
+        </template>
+      </div>
+    </div>
   </template>
   <script>(function() {
   'use strict';
 
   Polymer({
     is: 'calculate-halflife',
-
+    ready: function() {
+      this.mydates = [
+        {adate: 'Projectos', pct: '10'},
+        {adate: 'Facturas', pct: '25'},
+        {adate: 'Soporte', pct: '50'}
+      ];
+    },
     properties: {
       message: {
         type: String,
         value: 'calculate-halflife barton'
+      },
+      calculated: {
+        type: Boolean,
+        value: false
       }
     },
     addZeroIfNecessary: function(value) {
@@ -16272,52 +16440,66 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return dateString;
     },
     calculateHalflife: function(){
-
-      var birthdate = this.getDate(this.$.birthdayMonth.value,
+      this.calculated = false;
+      
+      var birthdateStr = this.getDate(this.$.birthdayMonth.value,
                               this.$.birthdayDay.value,
                               this.$.birthdayYear.value);
-      if (! moment(birthdate, 'YYYY-MM-DD', true).isValid()) {
+      if (! moment(birthdateStr, 'YYYY-MM-DD', true).isValid()) {
         this.message = 'Birthday is not valid.  Please review.';
         document.querySelector('#toastOK').show();
         return;
       }
       
-      var signifdate = this.getDate(this.$.signifMonth.value,
+      var signifdateStr = this.getDate(this.$.signifMonth.value,
                                     this.$.signifDay.value,
                                     this.$.signifYear.value);
-      if (! moment(signifdate, 'YYYY-MM-DD', true).isValid()) {
+      if (! moment(signifdateStr, 'YYYY-MM-DD', true).isValid()) {
         this.message = 'Significant date is not valid.  Please review.';
         document.querySelector('#toastOK').show();
         return;
       }
 
-      var now = moment(new Date());
+      var birth = moment(birthdateStr, 'YYYY-MM-DD', true);
 
-      var birth = moment(birthdate, 'YYYY-MM-DD', true);
-
-      var meet = moment(signifdate, 'YYYY-MM-DD', true);
-
-      var daysFromBirth = now.diff(birth,'days');
-      var daysSinceMeeting = now.diff(meet,'days');
-      var moreThenHalf = (daysFromBirth/2) - daysSinceMeeting;
-
-
-
-      while (moreThenHalf > 0) {
-        now.add(1,'days');
-        daysFromBirth = now.diff(birth,'days');
-        daysSinceMeeting = now.diff(meet,'days');
-        moreThenHalf = (daysFromBirth/2) - daysSinceMeeting;
-      }
+      var meet = moment(signifdateStr, 'YYYY-MM-DD', true);
+      var origMeet = moment(signifdateStr, 'YYYY-MM-DD', true);
       
-      this.message = 'on ' + now.format('dddd, MMMM Do YYYY') + ' I have been alive ' + daysFromBirth + ' and have known you for ' + daysSinceMeeting;
-      document.querySelector('#toastOK').show();
+      var dates = [];
+      
+      while(meet.diff(birth,'years') < 100) {
+        meet.add(1,'days');
+        var daysOldNow = meet.diff(birth,'days');
+        var meetDays = meet.diff(origMeet, 'days');
+
+        var pct = (meetDays/daysOldNow) * 100;
+        
+        if (pct > 0 && (pct % 10 === 0)) {
+          dates.push({adate: meet.format('dddd, MMMM Do YYYY'), pct: pct});
+        } else {
+          pct = Math.floor(pct);
+          if (pct > 0 && ( pct % 10 ===0)) {
+            var found = false;
+            for (var i = 0; i < dates.length; i++) {
+              if (dates[i].pct === pct) {
+                found = true;
+                break;
+              }
+            }
+            
+            if (!found) {
+              dates.push({adate: meet.format('dddd, MMMM Do YYYY'), pct: Math.floor(pct)});
+            }
+          }
+
+        }
+      }//while
+      this.mydates = dates;
+      this.calculated=true;
     }
 
   });
 })();
 </script>
-
-
 </dom-module>
 </div></body></html>
