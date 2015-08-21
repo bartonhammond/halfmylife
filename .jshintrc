@@ -21,5 +21,6 @@
     "page": true,
     "app": true,
     "moment": true
-  }
+  },
+  "newcap": false
 }
