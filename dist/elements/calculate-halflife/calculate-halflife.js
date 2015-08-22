@@ -1,3 +1,8 @@
+/**
+@license
+Copyright (c) 2015 Barton Hammond . All rights reserved.
+*/
+
 (function() {
   'use strict';
 
@@ -5,15 +10,12 @@
     is: 'calculate-halflife',
     ready: function() {
       this.mydates = [
-        {adate: 'Projectos', pct: '10'},
-        {adate: 'Facturas', pct: '25'},
-        {adate: 'Soporte', pct: '50'}
       ];
     },
     properties: {
       message: {
         type: String,
-        value: 'calculate-halflife barton'
+        value: 'calculate-halflife'
       },
       calculated: {
         type: Boolean,
@@ -55,10 +57,16 @@
         return;
       }
 
-      var birth = moment(birthdateStr, 'YYYY-MM-DD', true);
 
+      var birth = moment(birthdateStr, 'YYYY-MM-DD', true);
       var meet = moment(signifdateStr, 'YYYY-MM-DD', true);
       var origMeet = moment(signifdateStr, 'YYYY-MM-DD', true);
+
+      if (meet.diff(birth,'days') < 0) {
+        this.message = 'Significant date should be later or after then birthday.';
+        document.querySelector('#toastOK').show();
+        return;
+      }
       
       var dates = [];
       
