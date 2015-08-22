@@ -1,12 +1,4 @@
 <html><head><meta charset="UTF-8"><!--
-    @license
-    Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-    Code distributed by Google as part of the polymer project is also
-    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-  --><!--
 @license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE
@@ -30,6 +22,9 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+--><!--
+@license
+Copyright (c) 2015 Barton Hammond . All rights reserved.
 --><style>
 
   /*******************************
@@ -12060,6 +12055,10 @@ module.exports = Array.isArray || function (arr) {
     app.route = 'home';
   });
 
+  page('/calculate', function () {
+    app.route = 'calculate';
+  });
+
   page('/license', function () {
     app.route = 'license';
   });
@@ -16254,81 +16253,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     })
   </script>
 </dom-module>
-<dom-module id="my-greeting" assetpath="my-greeting/">
-  <style>
-    :host {
-      display: block;
-    }
-
-    @media (max-width: 600px) {
-      h1.paper-font-display1 {
-        font-size: 24px;
-      }
-    }
-  </style>
-  <template>
-    <h1 class="paper-font-display1"><span>{{greeting}}</span></h1>
-    <span class="paper-font-body2">Update text to change the greeting.</span>
-    
-    <input class="paper-font-body2" value="{{greeting::input}}">
-  </template>
-
-  <script>
-    (function() {
-      Polymer({
-        is: 'my-greeting',
-
-        properties: {
-          greeting: {
-            type: String,
-            value: 'Welcome!',
-            notify: true
-          }
-        }
-      });
-    })();
-  </script>
-
-</dom-module>
-<dom-module id="my-list" assetpath="my-list/">
-  <style>
-    :host {
-      display: block;
-    }
-  </style>
-  <template>
-    <ul>
-      <template is="dom-repeat" items="{{items}}">
-        <li><span class="paper-font-body1">{{item}}</span></li>
-      </template>
-    </ul>
-  </template>
-
-  <script>
-    (function () {
-      Polymer({
-        is: 'my-list',
-        properties: {
-          items: {
-            type: Array,
-            notify: true,
-          }
-        },
-        ready: function() {
-          this.items = [
-            'Responsive Web App boilerplate',
-            'Iron Elements and Paper Elements',
-            'End-to-end Build Tooling (including Vulcanize)',
-            'Unit testing with Web Component Tester',
-            'Routing with Page.js',
-            'Offline support with the Platinum Service Worker Elements'
-          ];
-        }
-      });
-    })();
-  </script>
-
-</dom-module>
 <dom-module id="calculate-halflife" assetpath="calculate-halflife/">
   <style is="custom-style">
     .list {
@@ -16353,27 +16277,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </style>
   <template>
 
-    Birthday:
+    Your Birthday:
     <div class="horizontal layout">
-      <paper-input id="birthdayMonth" label="Month" value="10" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
+      <paper-input id="birthdayMonth" label="Month" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
       </paper-input>
 
-      <paper-input id="birthdayDay" label="Day" value="8" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
+      <paper-input id="birthdayDay" label="Day" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
       </paper-input>
 
-      <paper-input id="birthdayYear" label="Year" value="1954" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
+      <paper-input id="birthdayYear" label="Year" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
       </paper-input>
     </div>
 
-    Significant Date:
+    Significant Date: (when you met someone or married someone, etc)
     <div class="horizontal layout">
-      <paper-input id="signifMonth" label="Month" value="12" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
+      <paper-input id="signifMonth" label="Month" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
       </paper-input>
 
-      <paper-input id="signifDay" label="Day" value="24" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
+      <paper-input id="signifDay" label="Day" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
       </paper-input>
 
-      <paper-input id="signifYear" label="Year" value="1985" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
+      <paper-input id="signifYear" label="Year" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
       </paper-input>
     </div>
     <div class="horizontal layout">    
@@ -16403,22 +16327,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
     </div>
   </template>
-  <script>(function() {
+  <script>/**
+@license
+Copyright (c) 2015 Barton Hammond . All rights reserved.
+*/
+
+(function() {
   'use strict';
 
   Polymer({
     is: 'calculate-halflife',
     ready: function() {
       this.mydates = [
-        {adate: 'Projectos', pct: '10'},
-        {adate: 'Facturas', pct: '25'},
-        {adate: 'Soporte', pct: '50'}
       ];
     },
     properties: {
       message: {
         type: String,
-        value: 'calculate-halflife barton'
+        value: 'calculate-halflife'
       },
       calculated: {
         type: Boolean,
@@ -16460,10 +16386,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return;
       }
 
-      var birth = moment(birthdateStr, 'YYYY-MM-DD', true);
 
+      var birth = moment(birthdateStr, 'YYYY-MM-DD', true);
       var meet = moment(signifdateStr, 'YYYY-MM-DD', true);
       var origMeet = moment(signifdateStr, 'YYYY-MM-DD', true);
+
+      if (meet.diff(birth,'days') < 0) {
+        this.message = 'Significant date should be later or after then birthday.';
+        document.querySelector('#toastOK').show();
+        return;
+      }
       
       var dates = [];
       

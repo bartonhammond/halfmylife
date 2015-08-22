@@ -1,0 +1,10 @@
+1. Add menu option w/ Stats
+2. When navigating to Calculate, obtain geoLocation
+3. Update GeoFire w/ geoLocation
+4. Update and display total Calculation usages
+5. On Stats page show usage
+
+Requires:
+1. Firebase
+2. GeoFire
+3. Google GeoChart
