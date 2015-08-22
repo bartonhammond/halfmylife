@@ -1,21 +1,15 @@
 <!doctype html>
 <!--
-    @license
-    Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-    Code distributed by Google as part of the polymer project is also
-    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
-  -->
-
+@license
+Copyright (c) 2015 Barton Hammond . All rights reserved.
+-->
 <html lang="">
 
   <head>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="Polymer Starter Kit" />
+    <meta name="generator" content="Half My Life" />
     <title>Half My Life</title>
     <!-- Place favicon.ico in the `app/` directory -->
 
@@ -82,7 +76,12 @@
               <span>Home</span>
             </a>
 
-            <a data-route="users" href="/license">
+            <a data-route="calculate" href="/calculate">
+              <iron-icon icon="schedule"></iron-icon>
+              <span>Calculate</span>
+             </a>
+             
+            <a data-route="license" href="/license">
               <iron-icon icon="info"></iron-icon>
               <span>License</span>
             </a>
@@ -121,20 +120,57 @@
 
               <section data-route="home">
                 <paper-material elevation="1">
+                  <h3>Have you been with me Half My Life?</h3>
+                  <p>Have you ever wondered if you've been with
+                  someone half your life? For example, have you been
+                  married to your spouse or have a significant other
+                  or best friend for half of your life? Or maybe you'd
+                  like to know the day when your child is half your age?
+                  What day would that half way point be?
+                  </p>
+                  <h3>Welcome to Half My Life</h3>
+                  <p>These questions can
+                  be answered by doing some gymnastics with calendars
+                  and dates.  But you don't have to pull out pencil
+                  and paper to figure this out!  Welcome to <bold>Half
+                  My Life</bold>
+                    - a simple way to answer the questions above.
+                  </p>
+                  <h3>How do I use Half My Life?</h3>
+                  <p>To calculate the date in question, first select the
+                    menu option "Calculate". 
+                  There are two fields to
+                  complete, the first is your birthday - just enter
+                  the numbers representing your Month, Day and Year.
+                  The next field is the date when the relationship
+                  started.  It can be the date when you met your
+                  spouse or significant other.  It could be the date
+                  your child was born.
+                  </p>
+                  <p>Once you have the two dates entered, press the
+                  Calculate key and the key dates or milestones are
+                  shown, among them the 50%, or half your life
+                    milestone. Note that milestones are on multiples
+                  of 10% of your life.  It only reports dates
+                  that are potentially obtainable, namely those dates
+                  that are less then 100 after the significant date.
+                    occurred.
+                  </p>
+                </paper-material>
+              </section>
+
+              <section data-route="calculate">
+                <paper-material elevation="1">
                   <calculate-halflife></calculate-halflife>
                 </paper-material>
-
-               
-
               </section>
 
               <section data-route="license">
                 <paper-material elevation="1">
                   <h2 class="paper-font-display2">License</h2>
                    <paper-material elevation="1" class="paper-font-body2">
-                  <h1 id="license">License</h1>
-                  <p>Everything in this repo is BSD style license unless otherwise specified.</p>
-                  <p>Copyright (c) 2015 The Polymer Authors. All rights reserved.</p>
+                  <p>This software (see source here: <a href="https://github.com/bartonhammond/halfmylife">https://github.com/bartonhammond/halfmylife</a>) is BSD style license unless otherwise specified.</p>
+                  <p>Copyright (c) 2015 Barton Hammond. All rights reserved.</p>
                   <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
                   <ul>
                     <li>Redistributions of source code must retain the above copyright
@@ -143,8 +179,7 @@
                       copyright notice, this list of conditions and the following disclaimer
                       in the documentation and/or other materials provided with the
                       distribution.</li>
-                    <li>Neither the name of Google Inc. nor the names of its
-                      contributors may be used to endorse or promote products derived from
+                    <li>The name of Barton Hammond may not be used to endorse or promote products derived from
                       this software without specific prior written permission.</li>
                   </ul>
                   <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
@@ -193,7 +228,7 @@
     </template>
 
     <script src="../bower_components/moment/moment.js"></script>
-    <!-- version 0.2 -->
+    <!-- version 0.3 -->
     <!-- build:js scripts/app.js -->
     <script src="scripts/app.js"></script>
     <!-- endbuild-->
