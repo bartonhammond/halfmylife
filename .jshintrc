@@ -20,7 +20,8 @@
     "Platform": true,
     "page": true,
     "app": true,
-    "moment": true
+    "moment": true,
+    "google": true
   },
   "newcap": false
 }
