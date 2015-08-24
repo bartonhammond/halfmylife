@@ -13,7 +13,8 @@
     "moment": "~2.10.6",
     "paper-badge": "PolymerElements/paper-badge#~1.0.3",
     "google-apis": "GoogleWebComponents/google-apis#~1.0.3",
-    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.3"
+    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.3",
+    "google-chart": "GoogleWebComponents/google-chart#~1.0.2"
   },
   "devDependencies": {}
 }

@@ -80,7 +80,12 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
               <iron-icon icon="schedule"></iron-icon>
               <span>Calculate</span>
              </a>
-             
+
+            <a data-route="stats" href="/stats">
+              <iron-icon icon="supervisor-account"></iron-icon>
+              <span>Stats</span>
+             </a>
+
             <a data-route="license" href="/license">
               <iron-icon icon="info"></iron-icon>
               <span>License</span>
@@ -165,6 +170,12 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
                 </paper-material>
               </section>
 
+              <section data-route="stats">
+                <paper-material elevation="1">
+                  <geochart-usage></geochart-usage>
+                </paper-material>
+              </section>
+
               <section data-route="license">
                 <paper-material elevation="1">
                   <h2 class="paper-font-display2">License</h2>
@@ -228,7 +239,7 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
     </template>
 
     <script src="../bower_components/moment/moment.js"></script>
-    <!-- version 0.4 -->
+    <!-- version 0.5 -->
     <!-- build:js scripts/app.js -->
     <script src="scripts/app.js"></script>
     <!-- endbuild-->
