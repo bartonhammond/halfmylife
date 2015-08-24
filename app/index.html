@@ -80,7 +80,12 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
               <iron-icon icon="schedule"></iron-icon>
               <span>Calculate</span>
              </a>
-             
+
+            <a data-route="stats" href="/stats">
+              <iron-icon icon="supervisor-account"></iron-icon>
+              <span>Stats</span>
+             </a>
+
             <a data-route="license" href="/license">
               <iron-icon icon="info"></iron-icon>
               <span>License</span>
@@ -162,6 +167,12 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
               <section data-route="calculate">
                 <paper-material elevation="1">
                   <calculate-halflife></calculate-halflife>
+                </paper-material>
+              </section>
+
+              <section data-route="stats">
+                <paper-material elevation="1">
+                  <geochart-usage></geochart-usage>
                 </paper-material>
               </section>
 
