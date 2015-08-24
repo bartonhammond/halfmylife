@@ -12424,6 +12424,795 @@ U.prototype.We=function(a,b){x("Firebase.resetPassword",2,2,arguments.length);fg
     };
   })();
 </script>
+<script>function MakePromise (asap) {
+  function Promise(fn) {
+		if (typeof this !== 'object' || typeof fn !== 'function') throw new TypeError();
+		this._state = null;
+		this._value = null;
+		this._deferreds = []
+
+		doResolve(fn, resolve.bind(this), reject.bind(this));
+	}
+
+	function handle(deferred) {
+		var me = this;
+		if (this._state === null) {
+			this._deferreds.push(deferred);
+			return
+		}
+		asap(function() {
+			var cb = me._state ? deferred.onFulfilled : deferred.onRejected
+			if (typeof cb !== 'function') {
+				(me._state ? deferred.resolve : deferred.reject)(me._value);
+				return;
+			}
+			var ret;
+			try {
+				ret = cb(me._value);
+			}
+			catch (e) {
+				deferred.reject(e);
+				return;
+			}
+			deferred.resolve(ret);
+		})
+	}
+
+	function resolve(newValue) {
+		try { //Promise Resolution Procedure: https://github.com/promises-aplus/promises-spec#the-promise-resolution-procedure
+			if (newValue === this) throw new TypeError();
+			if (newValue && (typeof newValue === 'object' || typeof newValue === 'function')) {
+				var then = newValue.then;
+				if (typeof then === 'function') {
+					doResolve(then.bind(newValue), resolve.bind(this), reject.bind(this));
+					return;
+				}
+			}
+			this._state = true;
+			this._value = newValue;
+			finale.call(this);
+		} catch (e) { reject.call(this, e); }
+	}
+
+	function reject(newValue) {
+		this._state = false;
+		this._value = newValue;
+		finale.call(this);
+	}
+
+	function finale() {
+		for (var i = 0, len = this._deferreds.length; i < len; i++) {
+			handle.call(this, this._deferreds[i]);
+		}
+		this._deferreds = null;
+	}
+
+	/**
+	 * Take a potentially misbehaving resolver function and make sure
+	 * onFulfilled and onRejected are only called once.
+	 *
+	 * Makes no guarantees about asynchrony.
+	 */
+	function doResolve(fn, onFulfilled, onRejected) {
+		var done = false;
+		try {
+			fn(function (value) {
+				if (done) return;
+				done = true;
+				onFulfilled(value);
+			}, function (reason) {
+				if (done) return;
+				done = true;
+				onRejected(reason);
+			})
+		} catch (ex) {
+			if (done) return;
+			done = true;
+			onRejected(ex);
+		}
+	}
+
+	Promise.prototype['catch'] = function (onRejected) {
+		return this.then(null, onRejected);
+	};
+
+	Promise.prototype.then = function(onFulfilled, onRejected) {
+		var me = this;
+		return new Promise(function(resolve, reject) {
+      handle.call(me, {
+        onFulfilled: onFulfilled,
+        onRejected: onRejected,
+        resolve: resolve,
+        reject: reject
+      });
+		})
+	};
+
+	Promise.resolve = function (value) {
+		if (value && typeof value === 'object' && value.constructor === Promise) {
+			return value;
+		}
+
+		return new Promise(function (resolve) {
+			resolve(value);
+		});
+	};
+
+	Promise.reject = function (value) {
+		return new Promise(function (resolve, reject) {
+			reject(value);
+		});
+	};
+
+	
+  return Promise;
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = MakePromise;
+}
+
+</script>
+<script>
+if (!window.Promise) {
+  window.Promise = MakePromise(Polymer.Base.async);
+}
+</script>
+
+
+<script>
+  Polymer({
+    is: 'iron-request',
+
+    properties: {
+
+      /**
+       * A reference to the XMLHttpRequest instance used to generate the
+       * network request.
+       *
+       * @attribute xhr
+       * @type XMLHttpRequest
+       * @default `new XMLHttpRequest`
+       */
+      xhr: {
+        type: Object,
+        notify: true,
+        readOnly: true,
+        value: function() {
+          return new XMLHttpRequest();
+        }
+      },
+
+      /**
+       * A reference to the parsed response body, if the `xhr` has completely
+       * resolved.
+       *
+       * @attribute response
+       * @type Object
+       * @default null
+       */
+      response: {
+        type: Object,
+        notify: true,
+        readOnly: true,
+        value: function() {
+         return null;
+        }
+      },
+
+      /**
+       * A promise that resolves when the `xhr` response comes back, or rejects
+       * if there is an error before the `xhr` completes.
+       *
+       * @attribute completes
+       * @type Promise
+       * @default `new Promise`
+       */
+      completes: {
+        type: Object,
+        readOnly: true,
+        notify: true,
+        value: function() {
+          return new Promise(function (resolve, reject) {
+            this.resolveCompletes = resolve;
+            this.rejectCompletes = reject;
+          }.bind(this));
+        }
+      },
+
+      /**
+       * An object that contains progress information emitted by the XHR if
+       * available.
+       *
+       * @attribute progress
+       * @type Object
+       * @default {}
+       */
+      progress: {
+        type: Object,
+        notify: true,
+        readOnly: true,
+        value: function() {
+          return {};
+        }
+      },
+
+      /**
+       * Aborted will be true if an abort of the request is attempted.
+       *
+       * @attribute aborted
+       * @type boolean
+       * @default false
+       */
+      aborted: {
+        type: Boolean,
+        notify: true,
+        readOnly: true,
+        value: false,
+      }
+    },
+
+    /**
+     * Succeeded is true if the request succeeded. The request succeeded if the
+     * status code is greater-than-or-equal-to 200, and less-than 300. Also,
+     * the status code 0 is accepted as a success even though the outcome may
+     * be ambiguous.
+     *
+     * @return boolean
+     */
+    get succeeded() {
+      var status = this.xhr.status || 0;
+
+      // Note: if we are using the file:// protocol, the status code will be 0
+      // for all outcomes (successful or otherwise).
+      return status === 0 ||
+        (status >= 200 && status < 300);
+    },
+
+    /**
+     * Sends an HTTP request to the server and returns the XHR object.
+     *
+     * @method request
+     * @param {{
+     *   url: string,
+     *   method: (string|undefined),
+     *   async: (boolean|undefined),
+     *   body: (ArrayBuffer|ArrayBufferView|Blob|Document|FormData|null|string|undefined),
+     *   headers: (Object|undefined),
+     *   handleAs: (string|undefined),
+     *   withCredentials: (boolean|undefined)}} options -
+     *     url The url to which the request is sent.
+     *     method The HTTP method to use, default is GET.
+     *     async By default, all requests are sent asynchronously. To send synchronous requests,
+     *         set to true.
+     *     body The content for the request body for POST method.
+     *     headers HTTP request headers.
+     *     handleAs The response type. Default is 'text'.
+     *     withCredentials Whether or not to send credentials on the request. Default is false.
+     * @return Promise
+     */
+    send: function (options) {
+      var xhr = this.xhr;
+
+      if (xhr.readyState > 0) {
+        return;
+      }
+
+      xhr.addEventListener('readystatechange', function () {
+        if (xhr.readyState === 4 && !this.aborted) {
+
+          if (!this.succeeded) {
+            this.rejectCompletes(new Error('The request failed with status code: ' + this.xhr.status));
+            return;
+          }
+
+          this._setResponse(this.parseResponse());
+          this.resolveCompletes(this);
+        }
+      }.bind(this));
+
+      xhr.addEventListener('progress', function (progress) {
+        this._setProgress({
+          lengthComputable: progress.lengthComputable,
+          loaded: progress.loaded,
+          total: progress.total
+        });
+      }.bind(this))
+
+      xhr.addEventListener('error', function (error) {
+        this.rejectCompletes(error);
+      }.bind(this));
+
+      xhr.addEventListener('abort', function () {
+        this.rejectCompletes(new Error('Request aborted.'));
+      }.bind(this));
+
+      xhr.open(
+        options.method || 'GET',
+        options.url,
+        options.async !== false
+      );
+
+      if (options.headers) {
+        Object.keys(options.headers).forEach(function (requestHeader) {
+          xhr.setRequestHeader(
+            requestHeader,
+            options.headers[requestHeader]
+          );
+        }, this);
+      }
+
+      // In IE, `xhr.responseType` is an empty string when the response
+      // returns. Hence, caching it as `xhr._responseType`.
+      xhr.responseType = xhr._responseType = (options.handleAs || 'text');
+      xhr.withCredentials = !!options.withCredentials;
+
+      xhr.send(options.body);
+
+      return this.completes;
+    },
+
+    parseResponse: function () {
+      var xhr = this.xhr;
+      var responseType = this.xhr.responseType ||
+        this.xhr._responseType;
+      // If we don't have a natural `xhr.responseType`, we prefer parsing
+      // `xhr.responseText` over returning `xhr.response`..
+      var preferResponseText = !this.xhr.responseType;
+
+      try {
+        switch (responseType) {
+          case 'json':
+            // If xhr.response is undefined, responseType `json` may
+            // not be supported.
+            if (preferResponseText || xhr.response === undefined) {
+              // If accessing `xhr.responseText` throws, responseType `json`
+              // is supported and the result is rightly `undefined`.
+              try {
+                xhr.responseText;
+              } catch (e) {
+                return xhr.response;
+              }
+
+              // Otherwise, attempt to parse `xhr.responseText` as JSON.
+              if (xhr.responseText) {
+                return JSON.parse(xhr.responseText);
+              }
+            }
+
+            return xhr.response;
+          case 'xml':
+            return xhr.responseXML;
+          case 'blob':
+          case 'document':
+          case 'arraybuffer':
+            return xhr.response;
+          case 'text':
+          default:
+            return xhr.responseText;
+        }
+      } catch (e) {
+        this.rejectCompletes(new Error('Could not parse response. ' + e.message));
+      }
+    },
+
+    abort: function () {
+      this._setAborted(true);
+      this.xhr.abort();
+    }
+  });
+</script>
+
+
+
+<script>
+
+  Polymer({
+
+    is: 'iron-ajax',
+
+    /**
+     * Fired when a request is sent.
+     *
+     * @event request
+     */
+
+    /**
+     * Fired when a response is received.
+     *
+     * @event response
+     */
+
+    /**
+     * Fired when an error is received.
+     *
+     * @event error
+     */
+
+    properties: {
+      /**
+       * The URL target of the request.
+       */
+      url: {
+        type: String,
+        value: ''
+      },
+
+      /**
+       * An object that contains query parameters to be appended to the
+       * specified `url` when generating a request.
+       */
+      params: {
+        type: Object,
+        value: function() {
+          return {};
+        }
+      },
+
+      /**
+       * The HTTP method to use such as 'GET', 'POST', 'PUT', or 'DELETE'.
+       * Default is 'GET'.
+       */
+      method: {
+        type: String,
+        value: 'GET'
+      },
+
+      /**
+       * HTTP request headers to send.
+       *
+       * Example:
+       *
+       *     <iron-ajax
+       *         auto
+       *         url="http://somesite.com"
+       *         headers='{"X-Requested-With": "XMLHttpRequest"}'
+       *         handle-as="json"
+       *         last-response-changed="{{handleResponse}}"></iron-ajax>
+       */
+      headers: {
+        type: Object,
+        value: function() {
+          return {};
+        }
+      },
+
+      /**
+       * Content type to use when sending data. If the contenttype is set
+       * and a `Content-Type` header is specified in the `headers` attribute,
+       * the `headers` attribute value will take precedence.
+       */
+      contentType: {
+        type: String,
+        value: 'application/x-www-form-urlencoded'
+      },
+
+      /**
+       * Optional raw body content to send when method === "POST".
+       *
+       * Example:
+       *
+       *     <iron-ajax method="POST" auto url="http://somesite.com"
+       *         body='{"foo":1, "bar":2}'>
+       *     </iron-ajax>
+       */
+      body: {
+        type: String,
+        value: ''
+      },
+
+      /**
+       * Toggle whether XHR is synchronous or asynchronous. Don't change this
+       * to true unless You Know What You Are Doing™.
+       */
+      sync: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Specifies what data to store in the `response` property, and
+       * to deliver as `event.response` in `response` events.
+       *
+       * One of:
+       *
+       *    `text`: uses `XHR.responseText`.
+       *
+       *    `xml`: uses `XHR.responseXML`.
+       *
+       *    `json`: uses `XHR.responseText` parsed as JSON.
+       *
+       *    `arraybuffer`: uses `XHR.response`.
+       *
+       *    `blob`: uses `XHR.response`.
+       *
+       *    `document`: uses `XHR.response`.
+       */
+      handleAs: {
+        type: String,
+        value: 'json'
+      },
+
+      /**
+       * Set the withCredentials flag on the request.
+       */
+      withCredentials: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * If true, automatically performs an Ajax request when either `url` or
+       * `params` changes.
+       */
+      auto: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * If true, error messages will automatically be logged to the console.
+       */
+      verbose: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Will be set to true if there is at least one in-flight request
+       * associated with this iron-ajax element.
+       */
+      loading: {
+        type: Boolean,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * Will be set to the most recent request made by this iron-ajax element.
+       */
+      lastRequest: {
+        type: Object,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * Will be set to the most recent response received by a request
+       * that originated from this iron-ajax element. The type of the response
+       * is determined by the value of `handleas` at the time that the request
+       * was generated.
+       */
+      lastResponse: {
+        type: Object,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * Will be set to the most recent error that resulted from a request
+       * that originated from this iron-ajax element.
+       */
+      lastError: {
+        type: Object,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * An Array of all in-flight requests originating from this iron-ajax
+       * element.
+       */
+      activeRequests: {
+        type: Array,
+        notify: true,
+        readOnly: true,
+        value: function() {
+          this._setActiveRequests([]);
+        }
+      },
+
+      /**
+       * Length of time in milliseconds to debounce multiple requests.
+       */
+      debounceDuration: {
+        type: Number,
+        value: 0,
+        notify: true
+      },
+
+      _boundHandleResponse: {
+        type: Function,
+        value: function() {
+          return this.handleResponse.bind(this);
+        }
+      },
+
+      _boundDiscardRequest: {
+        type: Function,
+        value: function() {
+          return this.discardRequest.bind(this);
+        }
+      }
+    },
+
+    observers: [
+      'requestOptionsChanged(url, method, params, headers,' +
+        'contentType, body, sync, handleAs, withCredentials, auto)'
+    ],
+
+    get queryString () {
+      var queryParts = [];
+      var param;
+      var value;
+
+      for (param in this.params) {
+        value = this.params[param];
+        param = window.encodeURIComponent(param);
+
+        if (value !== null) {
+          param += '=' + window.encodeURIComponent(value);
+        }
+
+        queryParts.push(param);
+      }
+
+      return queryParts.join('&');
+    },
+
+    get requestUrl() {
+      var queryString = this.queryString;
+
+      if (queryString) {
+        return this.url + '?' + queryString;
+      }
+
+      return this.url;
+    },
+
+    get requestHeaders() {
+      var headers = {
+        'content-type': this.contentType
+      };
+      var header;
+
+      if (this.headers instanceof Object) {
+        for (header in this.headers) {
+          headers[header] = this.headers[header].toString();
+        }
+      }
+
+      return headers;
+    },
+
+    toRequestOptions: function() {
+      return {
+        url: this.requestUrl,
+        method: this.method,
+        headers: this.requestHeaders,
+        body: this.body,
+        async: !this.sync,
+        handleAs: this.handleAs,
+        withCredentials: this.withCredentials
+      };
+    },
+
+    requestOptionsChanged: function() {
+      this.debounce('generate-request', function() {
+        if (!this.url && this.url !== '') {
+          return;
+        }
+
+        if (this.auto) {
+          this.generateRequest();
+        }
+      }, this.debounceDuration);
+    },
+
+    /**
+     * Performs an AJAX request to the specified URL.
+     *
+     * @method generateRequest
+     */
+    generateRequest: function() {
+      var request = document.createElement('iron-request');
+      var requestOptions = this.toRequestOptions();
+
+      this.activeRequests.push(request);
+
+      request.completes.then(
+        this._boundHandleResponse
+      ).catch(
+        this.handleError.bind(this, request)
+      ).then(
+        this._boundDiscardRequest
+      );
+
+      request.send(requestOptions);
+
+      this._setLastRequest(request);
+
+      this.fire('request', {
+        request: request,
+        options: requestOptions
+      });
+
+      return request;
+    },
+
+    handleResponse: function(request) {
+      this._setLastResponse(request.response);
+      this.fire('response', request);
+    },
+
+    handleError: function(request, error) {
+      if (this.verbose) {
+        console.error(error);
+      }
+
+      this._setLastError({
+        request: request,
+        error: error
+      });
+      this.fire('error', {
+        request: request,
+        error: error
+      });
+    },
+
+    discardRequest: function(request) {
+      var requestIndex = this.activeRequests.indexOf(request);
+
+      if (requestIndex > 0) {
+        this.activeRequests.splice(requestIndex, 1);
+      }
+    }
+  });
+</script>
+<script>
+/**
+Dynamically loads the legacy Google JavaScript API Loader (https://developers.google.com/loader/).
+
+Fires `api-load` event when ready.
+*/
+  Polymer({
+
+    is: 'google-legacy-loader',
+
+    behaviors: [
+      Polymer.IronJsonpLibraryBehavior
+    ],
+
+    properties: {
+
+      /** @private */
+      libraryUrl: {
+        type: String,
+        value: 'https://www.google.com/jsapi?callback=%%callback%%'
+      },
+
+      /**
+       * Fired when the API library is loaded and available.
+       * @event js-api-load
+       */
+      /**
+       * Name of event fired when library is loaded and available.
+       */
+      notifyEvent: {
+        type: String,
+        value: 'api-load'
+      }
+    },
+
+    /**
+     * Wrapper for `google` API namespace.
+     */
+    get api() {
+      return google;
+    }
+  });
+</script>
+
 
 
 
@@ -13350,8 +14139,12 @@ module.exports = Array.isArray || function (arr) {
 
 },{}]},{},[1])(1)
 });</script>
-<script>
-    window.addEventListener('WebComponentsReady', function() {
+<script>/**
+   @license
+   Copyright (c) 2015 Barton Hammond . All rights reserved.
+*/
+
+window.addEventListener('WebComponentsReady', function() {
 
   // We use Page.js for routing. This is a Micro
   // client-side router inspired by the Express router
@@ -13368,6 +14161,10 @@ module.exports = Array.isArray || function (arr) {
     app.route = 'calculate';
   });
 
+  page('/stats', function() {
+    app.route= 'stats';
+  });
+  
   page('/license', function () {
     app.route = 'license';
   });
@@ -13382,6 +14179,7 @@ module.exports = Array.isArray || function (arr) {
   });
 
 });
+
 </script>
 
 <style is="custom-style">
@@ -17562,6 +18360,366 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     })
   </script>
 </dom-module>
+<dom-module id="google-chart" assetpath="../bower_components/google-chart/">
+  <style>
+:host {
+  display: -webkit-flex;
+  display: -ms-flex;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  width: 400px;
+  height: 300px;
+}
+
+#chartdiv {
+  width: 100%;
+}
+
+</style>
+  <template>
+    <iron-ajax id="ajax" handle-as="json" url="{{data}}" on-response="_externalDataLoaded"></iron-ajax>
+    <div id="chartdiv"></div>
+    <google-legacy-loader on-api-load="_readyForAction"></google-legacy-loader>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+  "use strict";
+
+  Polymer({
+
+    is: 'google-chart',
+
+    /**
+     * Fired when the graph is displayed.
+     *
+     * @event google-chart-render
+     */
+
+    /**
+     * Fired when the user makes a selection in the chart.
+     *
+     * @event google-chart-select
+     * @param {object} detail
+     *   @param {array} detail.selection The user-defined selection.
+     */
+
+    properties: {
+      /**
+       * Sets the type of the chart.
+       *
+       * Should be one of:
+       * - `area`, `bar`, `bubble`, `candlestick`, `column`, `combo`, `geo`,
+       *   `histogram`, `line`, `pie`, `scatter`, `stepped-area`
+       *
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/gallery">Google Visualization API reference (Chart Gallery)</a> for details.
+       *
+       */
+      type: {
+        type: String,
+        value: 'column',
+        observer: '_typeChanged'
+      },
+
+      /**
+       * Sets the options for the chart.
+       *
+       * Example:
+       * <pre>{
+       *   title: "Chart title goes here",
+       *   hAxis: {title: "Categories"},
+       *   vAxis: {title: "Values", minValue: 0, maxValue: 2},
+       *   legend: "none"
+       * };</pre>
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/gallery">Google Visualization API reference (Chart Gallery)</a>
+       * for the options available to each chart type.
+       *
+       */
+      options: {
+        type: Object,
+        value: function() { return {}; }
+      },
+
+      /**
+       * Sets the data columns for this object.
+       *
+       * When specifying data with `cols` you must also specify `rows`, and
+       * not specify `data`.
+       *
+       * Example:
+       * <pre>[{label: "Categories", type: "string"},
+       *  {label: "Value", type: "number"}]</pre>
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable_addColumn">Google Visualization API reference (addColumn)</a>
+       * for column definition format.
+       *
+       * @attribute cols
+       * @type array
+       */
+      cols: {
+        type: Array,
+        value: function() { return []; }
+      },
+      /**
+       * Sets the data rows for this object.
+       *
+       * When specifying data with `rows` you must also specify `cols`, and
+       * not specify `data`.
+       *
+       * Example:
+       * <pre>[["Category 1", 1.0],
+       *  ["Category 2", 1.1]]</pre>
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#addrow">Google Visualization API reference (addRow)</a>
+       * for row format.
+       *
+       * @attribute rows
+       * @type array
+       */
+      rows: {
+        type: Array,
+        value: function() { return []; }
+      },
+
+      /**
+       * Sets the entire dataset for this object.
+       * Can be used to provide the data directly, or to provide a URL from
+       * which to request the data.
+       *
+       * The data format can be a two-dimensional array or the DataTable format
+       * expected by Google Charts.
+       * See <a href="https://google-developers.appspot.com/chart/interactive/docs/reference#DataTable">Google Visualization API reference (DataTable constructor)</a>
+       * for data table format details.
+       *
+       * When specifying data with `data` you must not specify `cols` or `rows`.
+       *
+       * Example:
+       * <pre>[["Categories", "Value"],
+       *  ["Category 1", 1.0],
+       *  ["Category 2", 1.1]]</pre>
+       *
+       * @attribute data
+       * @type array, object, or string
+       */
+      data: {
+        type: Object, // or array, or object
+        value: function() { return []; }
+      },
+
+      /**
+       * Selected datapoint(s) in the map.
+       *
+       * An array of objects, each with a numeric row and/or column property.
+       * `row` and `column` are the zero-based row or column number of an item
+       * in the data table to select.
+       *
+       * To select a whole column, set row to null;
+       * to select a whole row, set column to null.
+       *
+       * Example:
+       * <pre>
+       *   [{row:0,column:1}, {row:1, column:null}]
+       * </pre>
+       *
+       * @attribute selection
+       * @type array
+       */
+      selection: {
+        type: Array,
+        value: function() { return []; },
+        observer: '_selectionChanged'
+      },
+    },
+
+    observers: [
+      '_loadData(rows, cols, data)'
+    ],
+
+    _packages: null,
+
+    _chartObject: null,
+
+    _isReady: false,
+
+    _canDraw: false,
+
+    _dataTable: null,
+
+    _chartTypes: null,
+
+    _readyForAction: function(e, detail, sender) {
+      this._loadPackageByChartType();
+
+      google.load("visualization", "1", {
+        packages: this._packages[this.type],
+        callback: function() {
+          this._isReady = true;
+          this._loadChartTypes();
+          this._loadData();
+        }.bind(this)
+      });
+    },
+
+    _typeChanged: function() {
+      // Invalidate current chart object.
+      this._chartObject = null;
+      this._loadData();
+    },
+
+    _selectionChanged: function() {
+      if (this._chartObject && this.setSelection) {
+        this._chartObject.setSelection(this.selection);
+      }
+    },
+
+    /**
+     * Draws the chart.
+     *
+     * Called automatically on first load and whenever one of the attributes
+     * changes. Can be called manually to handle e.g. page resizes.
+     *
+     * @method drawChart
+     * @return {Object} Returns null.
+     */
+    drawChart: function() {
+      if (this._canDraw) {
+        if (!this.options) {
+          this.options = {};
+        }
+        if (!this._chartObject) {
+          var chartClass = this._chartTypes[this.type];
+          if (chartClass) {
+            this._chartObject = new chartClass(this.$.chartdiv);
+          }
+        }
+        if (this._chartObject) {
+          google.visualization.events.addOneTimeListener(this._chartObject,
+              'ready', function() {
+                  this.fire('google-chart-render');
+              }.bind(this));
+
+          google.visualization.events.addListener(this._chartObject,
+              'select', function() {
+                  this.selection = this._chartObject.getSelection();
+                  this.fire('google-chart-select',
+                      { selection: this._chartObject.getSelection() });
+              }.bind(this));
+
+
+          this._chartObject.draw(this._dataTable, this.options);
+
+          if (this._chartObject.setSelection){
+            this._chartObject.setSelection(this.selection);
+          }
+        } else {
+          this.$.chartdiv.innerHTML = 'Undefined chart type';
+        }
+      }
+      return null;
+    },
+
+    _loadChartTypes: function() {
+      this._chartTypes = {
+        'area': google.visualization.AreaChart,
+        'bar': google.visualization.BarChart,
+        'bubble': google.visualization.BubbleChart,
+        'candlestick': google.visualization.CandlestickChart,
+        'column': google.visualization.ColumnChart,
+        'combo': google.visualization.ComboChart,
+        'geo': google.visualization.GeoChart,
+        'histogram': google.visualization.Histogram,
+        'line': google.visualization.LineChart,
+        'pie': google.visualization.PieChart,
+        'scatter': google.visualization.ScatterChart,
+        'stepped-area': google.visualization.SteppedAreaChart,
+        'table': google.visualization.Table,
+        'gauge': google.visualization.Gauge
+      };
+    },
+
+    _loadPackageByChartType: function() {
+      this._packages = {
+        'area': 'corechart',
+        'bar': 'corechart',
+        'bubble': 'corechart',
+        'candlestick': 'corechart',
+        'column': 'corechart',
+        'combo': 'corechart',
+        'geo': 'corechart',
+        'histogram': 'corechart',
+        'line': 'corechart',
+        'pie': 'corechart',
+        'scatter': 'corechart',
+        'stepped-area': 'corechart',
+        'table': 'table',
+        'gauge': 'gauge'
+      };
+    },
+
+    _loadData: function() {
+      this._canDraw = false;
+      if (this._isReady) {
+        if (typeof this.data == 'string' || this.data instanceof String) {
+          // Load data asynchronously, from external URL.
+          this.$.ajax.generateRequest();
+        } else {
+          var dataTable = this._createDataTable();
+          this._canDraw = true;
+          if (dataTable) {
+            this._dataTable = dataTable;
+            this.drawChart();
+          }
+        }
+      }
+    },
+
+    _externalDataLoaded: function(e) {
+      var dataTable = this._createDataTable(e.detail.response);
+      this._canDraw = true;
+      this._dataTable = dataTable;
+      this.drawChart();
+    },
+
+    _createDataTable: function(data) {
+      var dataTable = null;
+
+      // If a data object was not passed to this function, default to the
+      // chart's data attribute. Passing a data object is necessary for
+      // cases when the data attribute is a URL pointing to an external
+      // data source.
+      if (!data) {
+        data = this.data;
+      }
+      if (!data)
+        data = [];
+
+      if (this.rows && this.rows.length > 0 && this.cols &&
+          this.cols.length > 0) {
+        // Create the data table from cols and rows.
+        dataTable = new google.visualization.DataTable();
+        dataTable.cols = this.cols;
+
+        for (var i = 0; i < this.cols.length; i++) {
+          dataTable.addColumn(this.cols[i]);
+        }
+
+        dataTable.addRows(this.rows);
+      } else {
+        // Create dataTable from the passed data or the data attribute.
+        // Data can be in the form of raw DataTable data or a two
+        // dimensional array.
+        if (data.rows && data.cols) {
+          dataTable = new google.visualization.DataTable(data);
+        } else if (data.length > 0) {
+          dataTable = google.visualization.arrayToDataTable(data);
+        }
+      }
+
+      return dataTable;
+    }
+  });
+})();
+</script>
 <dom-module id="calculate-halflife" assetpath="calculate-halflife/">
   <style is="custom-style">
     .list {
@@ -17805,6 +18963,40 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   });
 })();
+</script>
+</dom-module>
+<dom-module id="geochart-usage" assetpath="geochart-usage/">
+  <template>
+    <style>
+    </style>
+    Chart shows here
+    <google-chart type="geo" data="{{data}}">
+    </google-chart>
+
+  </template>
+  <script>/**
+   @license
+   Copyright (c) 2015 Barton Hammond . All rights reserved.
+*/
+
+(function() {
+  'use strict';
+
+  Polymer({
+    is: 'geochart-usage',
+    ready: function() {
+      this.data =
+        [['Country', 'Popularity'],
+         ['Germany', 200],
+         ['United States', 300],
+         ['Brazil', 400],
+         ['Canada', 500],
+         ['France', 600],
+         ['RU', 700]];
+    }
+  });
+})();
+
 </script>
 </dom-module>
 </div></body></html>
