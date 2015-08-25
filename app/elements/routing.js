@@ -10,7 +10,7 @@ window.addEventListener('WebComponentsReady', function() {
   // More info: https://visionmedia.github.io/page.js/
 
   //relative routing
-  page.base('/halfmylife');
+  //page.base('/halfmylife');
   
   page('/', function () {
     app.route = 'home';
@@ -18,10 +18,6 @@ window.addEventListener('WebComponentsReady', function() {
 
   page('/calculate', function () {
     app.route = 'calculate';
-  });
-
-  page('/stats', function() {
-    app.route= 'stats';
   });
   
   page('/license', function () {

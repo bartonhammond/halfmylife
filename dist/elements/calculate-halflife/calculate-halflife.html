@@ -115,65 +115,65 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
   </paper-button>
   <paper-toast id="toastOK" text="{{message}}"></paper-toast>
 </div>
-<div>
-  <p><strong>Note:  </strong>When prompted for your location,
-    please allow it. I am only interested in the State you are
-    living.  Thanks.
-</div>
 
 <div hidden="{{!calculated}}">
   <h4>Important Dates</h4>
   <div class="list short">
-    <paper-item>
-      <paper-item-body three-line class="layout horizontal">
-        <div class="marginright"><strong>%</strong></div>
-        <div><strong>Date</strong></div>
-        <div><strong>Calendar</strong></div>
-      </paper-item-body>
-    </paper-item>
-
-    <template id="calendardates" is="dom-repeat" items="{{mydates}}">
-      <paper-item>
-        <paper-item-body three-line class="layout center horizontal">
-          <div class="marginright">{{item.pct}}</div>
-          <div>{{item.adate}}</div>
-          <div title="Add to Calendar" class="addthisevent"
-               style$="{{item.style}}"
-               >
-            Add to Calendar
-            <span class="start">{{item.start}}</span>
-            <span class="end">{{item.end}}</span>
-            <span class="timezone">{{item.timezone}}</span>
-            <span class="title">{{item.title}}</span>
-            <span class="description">{{item.description}}</span>
-            <span class="all_day_event">true</span>
-            <span class="date_format">MM/DD/YYYY</span>
-          </div>
-        </paper-item-body>
-      </paper-item>
-
-    </template>
+    <div class="CSSTable" >
+      <table >
+        <tr>
+          <td>
+            PCT
+          </td>
+          <td >
+            Date
+          </td>
+          <td>
+            Calendar
+          </td>
+        </tr>
+        
+        <template id="calendardates" is="dom-repeat"
+                  items="{{mydates}}">
+          <tr>
+            <td>
+              <paper-item>
+                <paper-item-body class="layout center horizontal">
+                  <div class="marginright">{{item.pct}}</div>
+                </paper-item-body>
+              </paper-item>
+            </td>
+            <td>
+              <paper-item>
+                <paper-item-body class="layout center horizontal">
+                  <div>{{item.adate}}</div>
+                </paper-item-body>
+              </paper-item>
+            </td>
+            <td>
+              <paper-item>
+                <paper-item-body class="layout center horizontal">
+                  <div title="Add to Calendar" class="addthisevent"
+                       style$="{{item.style}}">
+                    Add to Calendar
+                    <span class="start">{{item.start}}</span>
+                    <span class="end">{{item.end}}</span>
+                    <span class="timezone">{{item.timezone}}</span>
+                    <span class="title">{{item.title}}</span>
+                    <span class="description">{{item.description}}</span>
+                    <span class="all_day_event">true</span>
+                    <span class="date_format">MM/DD/YYYY</span>
+                  </div>
+                </paper-item-body>
+              </paper-item>
+            </td>
+          </tr>
+        </template>
+      </table>
+    </div>
+    
   </div>
 </div>
-
-<google-maps-api api-key="AIzaSyDWwV0K5Vy0F2Rb13Hj7EbQ5oGXJqkQwBg"
-                 version="3.20">
-</google-maps-api>
-
-
-<firebase-collection
-   location="https://halfmylife.firebaseio.com/states"
-   data="{{states}}">
-</firebase-collection>
-
-<template  is="dom-repeat" items="{{states}}">
-  <paper-item>
-    <paper-item-body two-line class="layout horizontal">
-      <div class="marginright">{{item.__firebaseKey__}}</div>
-      <div>{{item.value}}</div>
-    </paper-item-body>
-  </paper-item>
-</template>
 
 </template>
 <script src="calculate-halflife.js"></script>
