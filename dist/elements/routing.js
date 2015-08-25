@@ -10,21 +10,21 @@ window.addEventListener('WebComponentsReady', function() {
   // More info: https://visionmedia.github.io/page.js/
 
   //relative routing
-  page.base('/halfmylife');
+//  page.base('/halfmylife');
   
-  page('/', function () {
+  page('halfmylife/', function () {
     app.route = 'home';
   });
 
-  page('/calculate', function () {
+  page('halfmylife/calculate', function () {
     app.route = 'calculate';
   });
   
-  page('/license', function () {
+  page('halfmylife//license', function () {
     app.route = 'license';
   });
 
-  page('/contact', function () {
+  page('halfmylife/contact', function () {
     app.route = 'contact';
   });
 
