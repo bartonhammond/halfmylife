@@ -39,7 +39,12 @@
     error: function(msg) {
       console.log(msg);
     },
+
     ready: function() {
+      //addthisevent needs to display button
+      this.$.calendardates.addEventListener('dom-change', function() {
+        addthisevent.refresh();
+      });
       this.mydates = [
       ];     
     },
@@ -121,21 +126,37 @@
       var daysOldAtMeet = meet.diff(birth,'days');
       
       for (var fraction = 0; fraction < this.fractions.length; fraction++) {
-        console.log(this.fractions[fraction].pct + '=' + this.fractions[fraction].txt);
         var pct = this.fractions[fraction].pct;
         var daysAfterMeet = (daysOldAtMeet * pct) / (1 - pct);
         var daysOldAfterMeet = daysOldAtMeet + daysAfterMeet;
         var celebrationDate = birth.clone();
         celebrationDate.add(daysOldAfterMeet, 'days');
-
+        
+         
         if (celebrationDate.diff(meet, 'years') < 100) {
+          var displayStyle = 'margin-left: 5px; color: #4285f4!important;font-weight: 600;';
+          if (celebrationDate.diff(moment(),'days') < 0) {
+            displayStyle = 'display: none';
+          }
+          
+          var title = this.$.title.value;
+          
           dates.push({adate: celebrationDate.format('dddd, MMMM Do YYYY'),
-                       pct: this.fractions[fraction].txt});
+                      pct: this.fractions[fraction].txt,
+                      style: displayStyle,
+                      start: celebrationDate.format('MM/DD/YYYY'),
+                      end: celebrationDate.format('MM/DD/YYYY'),
+                      timezone: 'America/Chicago',
+                      title: title,
+                      description: 'I have lived ' + this.fractions[fraction].txt + ' of my life since ' + meet.format('dddd, MMMM Do YYYY') + '!  Time to celebrate!!!'
+                     });
         }
       }
-
+  
       this.mydates = dates;
       this.calculated=true;
+
+  
     }
 
   });

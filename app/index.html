@@ -1,8 +1,8 @@
 <!doctype html>
 <!--
-@license
-Copyright (c) 2015 Barton Hammond . All rights reserved.
--->
+    @license
+    Copyright (c) 2015 Barton Hammond . All rights reserved.
+  -->
 <html lang="">
 
   <head>
@@ -12,7 +12,8 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
     <meta name="generator" content="Half My Life" />
     <title>Half My Life</title>
     <!-- Place favicon.ico in the `app/` directory -->
-
+    <link rel="icon" type="image/png" href="favicon.png" />
+    
     <!-- Chrome for Android theme color -->
     <meta name="theme-color" content="#303F9F">
 
@@ -25,16 +26,31 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="application-name" content="PSK">
-    <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Polymer Starter Kit">
-    <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
 
-    <!-- Tile icon for Win8 (144x144) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="images/touch/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/touch/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="images/touch/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/touch/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="images/touch/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="images/touch/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="images/touch/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/touch/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="images/touch/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/touch/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="images/touch/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/touch/favicon-16x16.png">
+    <link rel="manifest" href="images/touch/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="images/touch/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
 
     <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
@@ -49,10 +65,10 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
     <!-- endreplace-->
 
     <!-- relative routing
-    https://github.com/PolymerElements/polymer-starter-kit/issues/142
+         https://github.com/PolymerElements/polymer-starter-kit/issues/142
 
-    <base href="/halfmylife/">
-    -->
+         <base href="/halfmylife/">
+         -->
     
   </head>
 
@@ -79,12 +95,12 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
             <a data-route="calculate" href="/calculate">
               <iron-icon icon="schedule"></iron-icon>
               <span>Calculate</span>
-             </a>
+            </a>
 
             <a data-route="stats" href="/stats">
               <iron-icon icon="supervisor-account"></iron-icon>
               <span>Stats</span>
-             </a>
+            </a>
 
             <a data-route="license" href="/license">
               <iron-icon icon="info"></iron-icon>
@@ -114,7 +130,7 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
             <!-- Application sub title -->
             <div class="bottom bottom-container center horizontal layout">
               <div class="bottom-title paper-font-subhead">Looking
-              for reasons to celebrate!</div>
+                for reasons to celebrate!</div>
             </div>
 
           </paper-toolbar>
@@ -126,39 +142,41 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
               <section data-route="home">
                 <paper-material elevation="1">
                   <h3>Have you been with me Half My Life?</h3>
+                  <img style="margin-right:10px" src="images/boots.jpg" align="left">
                   <p>Have you ever wondered if you've been with
-                  someone half your life? For example, have you been
-                  married to your spouse or have a significant other
-                  or best friend for half of your life? Or maybe you'd
-                  like to know the day when your child is half your age?
-                  What day would that half way point be?
+                    someone half your life? For example, have you been
+                    married to your spouse or have a significant other
+                    or best friend for half of your life? Or maybe you'd
+                    like to know the day when your child is half your age?
+                    What day would that half way point be?
                   </p>
                   <h3>Welcome to Half My Life</h3>
                   <p>These questions can
-                  be answered by doing some gymnastics with calendars
-                  and dates.  But you don't have to pull out pencil
-                  and paper to figure this out!  Welcome to <bold>Half
-                  My Life</bold>
+                    be answered by doing some gymnastics with calendars
+                    and dates.  But you don't have to pull out pencil
+                    and paper to figure this out!  Welcome to <bold>Half
+                      My Life</bold>
                     - a simple way to answer the questions above.
                   </p>
                   <h3>How do I use Half My Life?</h3>
+                  <img style="margin-left:10px" src="images/onthebeach.jpg" align="right">
                   <p>To calculate the date in question, first select the
                     menu option "Calculate". 
-                  There are two fields to
-                  complete, the first is your birthday - just enter
-                  the numbers representing your Month, Day and Year.
-                  The next field is the date when the relationship
-                  started.  It can be the date when you met your
-                  spouse or significant other.  It could be the date
-                  your child was born.
+                    There are two fields to
+                    complete, the first is your birthday - just enter
+                    the numbers representing your Month, Day and Year.
+                    The next field is the date when the relationship
+                    started.  It can be the date when you met your
+                    spouse or significant other.  It could be the date
+                    your child was born.
                   </p>
                   <p>Once you have the two dates entered, press the
-                  Calculate key and the key dates or milestones are
-                  shown, among them the 50%, or half your life
+                    Calculate key and the key dates or milestones are
+                    shown, among them the 50%, or half your life
                     milestone. Note that milestones are on multiples
-                  of 10% of your life.  It only reports dates
-                  that are potentially obtainable, namely those dates
-                  that are less then 100 after the significant date.
+                    of 10% of your life.  It only reports dates
+                    that are potentially obtainable, namely those dates
+                    that are less then 100 after the significant date.
                     occurred.
                   </p>
                 </paper-material>
@@ -179,22 +197,22 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
               <section data-route="license">
                 <paper-material elevation="1">
                   <h2 class="paper-font-display2">License</h2>
-                   <paper-material elevation="1" class="paper-font-body2">
-                  <p>This software (see source here: <a href="https://github.com/bartonhammond/halfmylife">https://github.com/bartonhammond/halfmylife</a>) is BSD style license unless otherwise specified.</p>
-                  <p>Copyright (c) 2015 Barton Hammond. All rights reserved.</p>
-                  <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
-                  <ul>
-                    <li>Redistributions of source code must retain the above copyright
-                      notice, this list of conditions and the following disclaimer.</li>
-                    <li>Redistributions in binary form must reproduce the above
-                      copyright notice, this list of conditions and the following disclaimer
-                      in the documentation and/or other materials provided with the
-                      distribution.</li>
-                    <li>The name of Barton Hammond may not be used to endorse or promote products derived from
-                      this software without specific prior written permission.</li>
-                  </ul>
-                  <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
-                </paper-material>
+                  <paper-material elevation="1" class="paper-font-body2">
+                    <p>This software (see source here: <a href="https://github.com/bartonhammond/halfmylife">https://github.com/bartonhammond/halfmylife</a>) is BSD style license unless otherwise specified.</p>
+                    <p>Copyright (c) 2015 Barton Hammond. All rights reserved.</p>
+                    <p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+                    <ul>
+                      <li>Redistributions of source code must retain the above copyright
+                        notice, this list of conditions and the following disclaimer.</li>
+                      <li>Redistributions in binary form must reproduce the above
+                        copyright notice, this list of conditions and the following disclaimer
+                        in the documentation and/or other materials provided with the
+                        distribution.</li>
+                      <li>The name of Barton Hammond may not be used to endorse or promote products derived from
+                        this software without specific prior written permission.</li>
+                    </ul>
+                    <p>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+                  </paper-material>
                 </paper-material>
               </section>
 
@@ -237,9 +255,8 @@ Copyright (c) 2015 Barton Hammond . All rights reserved.
           -->
 
     </template>
-
     <script src="../bower_components/moment/moment.js"></script>
-    <!-- version 0.5 -->
+    <!-- version 0.6 -->
     <!-- build:js scripts/app.js -->
     <script src="scripts/app.js"></script>
     <!-- endbuild-->

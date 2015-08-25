@@ -1,11 +1,17 @@
 <!--
-    @license
-    Copyright (c) 2015 Barton Hammond . All rights reserved.
-  -->
+@license
+Copyright (c) 2015 Barton Hammond . All rights reserved.
+@import 'addthisevent/css/addthisevent.theme6.css';
+-->
 
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<!-- AddThisEvent -->
+<script type="text/javascript"
+        src="addthisevent.min.js"></script>
+
 
 <dom-module id="calculate-halflife">
+
   <style is="custom-style">
     .list {
     padding-top: 12px;
@@ -28,6 +34,7 @@
     }
   </style>
   <template>
+
     Your Birthday:
     <div class="horizontal layout">
       <paper-input
@@ -88,7 +95,17 @@
          error-message="1900-2015 only">
       </paper-input>
     </div>
-</div><!--flex-->
+
+    <div class="horizontal layout">
+      <paper-input
+         id="title"
+         char-counter
+         label="Event Description"
+         value="Marilyn and I met this day"
+         maxlength="100"
+         style="width: 500px"
+         </paper-input>
+
 </div>
 
 
@@ -108,17 +125,30 @@
   <h4>Important Dates</h4>
   <div class="list short">
     <paper-item>
-      <paper-item-body two-line class="layout horizontal">
+      <paper-item-body three-line class="layout horizontal">
         <div class="marginright"><strong>%</strong></div>
         <div><strong>Date</strong></div>
+        <div><strong>Calendar</strong></div>
       </paper-item-body>
     </paper-item>
 
-    <template  is="dom-repeat" items="{{mydates}}">
+    <template id="calendardates" is="dom-repeat" items="{{mydates}}">
       <paper-item>
-        <paper-item-body two-line class="layout horizontal">
+        <paper-item-body three-line class="layout center horizontal">
           <div class="marginright">{{item.pct}}</div>
           <div>{{item.adate}}</div>
+          <div title="Add to Calendar" class="addthisevent"
+               style$="{{item.style}}"
+               >
+            Add to Calendar
+            <span class="start">{{item.start}}</span>
+            <span class="end">{{item.end}}</span>
+            <span class="timezone">{{item.timezone}}</span>
+            <span class="title">{{item.title}}</span>
+            <span class="description">{{item.description}}</span>
+            <span class="all_day_event">true</span>
+            <span class="date_format">MM/DD/YYYY</span>
+          </div>
         </paper-item-body>
       </paper-item>
 
