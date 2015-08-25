@@ -8,34 +8,6 @@
 
   Polymer({
     is: 'calculate-halflife',
-    success: function(position) {
-      /*jshint camelcase: false */
-      var geocoder = new google.maps.Geocoder();
-      var latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
-      geocoder.geocode({'location': latlng}, function(results, status) {
-        if (status === google.maps.GeocoderStatus.OK) {
-
-          var countryIsUSA = false;
-          for (var i = 0; i < results.length; i++) {
-            if ('country' === results[i].types[0] && 'US' === results[i].address_components[0].short_name) {
-              countryIsUSA = true;
-              break;
-            }
-          }//for
-          
-          if (countryIsUSA) {
-            for (i = 0; i < results.length; i++) {
-              if ( 'administrative_area_level_1' === results[i].types[0]) {
-                var state = results[i].address_components[0].short_name;
-                console.log('USA ' + state);
-                break;
-              }
-            }
-          }//if USA
-        } //if OK
-      });
-
-    },
     error: function(msg) {
       console.log(msg);
     },
@@ -115,10 +87,6 @@
         this.message = 'Significant date should be later or after the birthday.';
         document.querySelector('#toastOK').show();
         return;
-      }
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(this.success, this.error);
       }
 
       var dates = [];
