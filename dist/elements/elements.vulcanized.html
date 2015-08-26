@@ -1,8 +1,8 @@
 <html><head><meta charset="UTF-8"><!--
-@license
-Copyright (c) 2015 Barton Hammond . All rights reserved.
-@import 'addthisevent/css/addthisevent.theme6.css';
---><!--
+    @license
+    Copyright (c) 2015 Barton Hammond . All rights reserved.
+    @import 'addthisevent/css/addthisevent.theme6.css';
+  --><!--
     @license
     Copyright (c) 2015 Barton Hammond . All rights reserved.
   --><!--
@@ -12058,7 +12058,7 @@ window.addEventListener('WebComponentsReady', function() {
   // More info: https://visionmedia.github.io/page.js/
 
   //relative routing
-  page.base('halfmylife/');
+//  page.base('halfmylife/');
   
   page('/', function () {
     app.route = 'home';
@@ -12072,8 +12072,8 @@ window.addEventListener('WebComponentsReady', function() {
     app.route = 'license';
   });
 
-  page('/contact', function () {
-    app.route = 'contact';
+  page('/about', function () {
+    app.route = 'about';
   });
 
 
@@ -16148,124 +16148,119 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="calculate-halflife" assetpath="calculate-halflife/">
 
   <style is="custom-style">
-    .list {
-    padding-top: 12px;
-    background-color: white;
-    display: inline-block;
-    margin: 12px;
-    @apply(--shadow-elevation-2dp);
-    }
-    .short {
-    padding-top: 12px;
-    }
     .marginright {
     margin-right: 25px;
-    }
-    paper-button.colorful {
-    color: #4285f4;
     }
     paper-toast {
     z-index: 9999;
     }
   </style>
   <template>
-
-    Your Birthday:
     <div class="horizontal layout">
-      <paper-input id="birthdayMonth" label="Month" value="10" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
-      </paper-input>
-      
-      <paper-input id="birthdayDay" label="Day" value="8" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
-      </paper-input>
-      
-      <paper-input id="birthdayYear" label="Year" value="1954" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
-      </paper-input>
-    </div>
-    
-    <br>
-    Significant Date: (when you met someone or married someone, etc)
-    <div class="horizontal layout">
-      <paper-input id="signifMonth" label="Month" value="12" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
-      </paper-input>
-      
-      <paper-input id="signifDay" label="Day" value="24" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
-      </paper-input>
-      
-      <paper-input id="signifYear" label="Year" value="1985" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
-      </paper-input>
-    </div>
+      <div class="flex-3">
 
-    <div class="horizontal layout">
-      <paper-input id="title" char-counter="" label="Event Description" value="Marilyn and I met this day" maxlength="100" style="width: 500px" <="" paper-input="">
-
-</paper-input></div>
-
-
-<div class="horizontal layout">    
-  <paper-button raised="" on-click="calculateHalflife" class="colorful">Calculate!
-  </paper-button>
-  <paper-toast id="toastOK" text="{{message}}"></paper-toast>
-</div>
-
-<div hidden="{{!calculated}}">
-  <h4>Important Dates</h4>
-  <div class="list short">
-    <div class="CSSTable">
-      <table>
-        <tbody><tr>
-          <td>
-            PCT
-          </td>
-          <td>
-            Date
-          </td>
-          <td>
-            Calendar
-          </td>
-        </tr>
+        Your Birthday:
+        <div class="horizontal layout">
+          <paper-input id="birthdayMonth" label="Month" value="10" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
+          </paper-input>
+          
+          <paper-input id="birthdayDay" label="Day" value="8" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
+          </paper-input>
+          
+          <paper-input id="birthdayYear" label="Year" value="1954" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
+          </paper-input>
+        </div>
         
-        <template id="calendardates" is="dom-repeat" items="{{mydates}}">
-          <tr>
-            <td>
-              <paper-item>
-                <paper-item-body class="layout center horizontal">
-                  <div class="marginright">{{item.pct}}</div>
-                </paper-item-body>
-              </paper-item>
-            </td>
-            <td>
-              <paper-item>
-                <paper-item-body class="layout center horizontal">
-                  <div>{{item.adate}}</div>
-                </paper-item-body>
-              </paper-item>
-            </td>
-            <td>
-              <paper-item>
-                <paper-item-body class="layout center horizontal">
-                  <div title="Add to Calendar" class="addthisevent" style$="{{item.style}}">
-                    Add to Calendar
-                    <span class="start">{{item.start}}</span>
-                    <span class="end">{{item.end}}</span>
-                    <span class="timezone">{{item.timezone}}</span>
-                    <span class="title">{{item.title}}</span>
-                    <span class="description">{{item.description}}</span>
-                    <span class="all_day_event">true</span>
-                    <span class="date_format">MM/DD/YYYY</span>
-                  </div>
-                </paper-item-body>
-              </paper-item>
-            </td>
-          </tr>
-        </template>
-      </tbody></table>
-    </div>
-    
-  </div>
-</div>
+        <br>
+        Significant Date: (when you met someone or married someone, etc)
+        <div class="horizontal layout">
+          <paper-input id="signifMonth" label="Month" value="12" auto-validate="" pattern="\b([1-9]|1[0-2])\b" error-message="1-12 only">
+          </paper-input>
+          
+          <paper-input id="signifDay" label="Day" value="24" auto-validate="" pattern="\b([1-9]|[12][0-9]|3[01])\b" error-message="1-31 only">
+          </paper-input>
+          
+          <paper-input id="signifYear" label="Year" value="1985" auto-validate="" pattern="\b(19[0-9]{2}|200[0-9]|201[0-5])\b" error-message="1900-2015 only">
+          </paper-input>
+        </div>
 
-</template>
-<script>/**
+        <div class="horizontal layout">
+          <paper-input id="title" char-counter="" label="Event Description" value="Marilyn and I met this day" maxlength="100" style="width: 500px">
+          </paper-input>
+        </div>
+
+        <div class="horizontal layout">    
+          <paper-button raised="" on-click="calculateHalflife" class="colorful">
+            <iron-icon icon="schedule">
+            </iron-icon>
+            Calculate!
+          </paper-button>
+          <paper-toast id="toastOK" text="{{message}}"></paper-toast>
+        </div>
+      </div>
+      <div class="flex-2">
+        <img style="margin-right:10px" src="../images/boots.jpg" align="left">
+      </div>
+    </div>
+      <div hidden="{{!calculated}}">
+        <h4>Important Dates</h4>
+        <div class="list short">
+          <div class="CSSTable">
+            <table>
+              <tbody><tr>
+                <td>
+                  PCT
+                </td>
+                <td>
+                  Date
+                </td>
+                <td>
+                  Calendar
+                </td>
+              </tr>
+              
+              <template id="calendardates" is="dom-repeat" items="{{mydates}}">
+                <tr>
+                  <td>
+                    <paper-item>
+                      <paper-item-body class="layout center horizontal">
+                        <div class="marginright">{{item.pct}}</div>
+                      </paper-item-body>
+                    </paper-item>
+                  </td>
+                  <td>
+                    <paper-item>
+                      <paper-item-body class="layout center horizontal">
+                        <div>{{item.adate}}</div>
+                      </paper-item-body>
+                    </paper-item>
+                  </td>
+                  <td>
+                    <paper-item>
+                      <paper-item-body class="layout center horizontal">
+                        <div title="Add to Calendar" class="addthisevent" style$="{{item.style}}">
+                          Add to Calendar
+                          <span class="start">{{item.start}}</span>
+                          <span class="end">{{item.end}}</span>
+                          <span class="timezone">{{item.timezone}}</span>
+                          <span class="title">{{item.title}}</span>
+                          <span class="description">{{item.description}}</span>
+                          <span class="all_day_event">true</span>
+                          <span class="date_format">MM/DD/YYYY</span>
+                        </div>
+                      </paper-item-body>
+                    </paper-item>
+                  </td>
+                </tr>
+              </template>
+            </tbody></table>
+          </div>
+          
+        </div>
+      </div>
+
+  </template>
+  <script>/**
    @license
    Copyright (c) 2015 Barton Hammond . All rights reserved.
 */
