@@ -10,7 +10,7 @@ window.addEventListener('WebComponentsReady', function() {
   // More info: https://visionmedia.github.io/page.js/
 
   //relative routing
-  //page.base('/halfmylife');
+  page.base('halfmylife/');
   
   page('/', function () {
     app.route = 'home';
@@ -27,9 +27,10 @@ window.addEventListener('WebComponentsReady', function() {
   page('/contact', function () {
     app.route = 'contact';
   });
-  
+
+
   // add #! before urls
-  page({
+  page.start({
     hashbang: true
   });
 
