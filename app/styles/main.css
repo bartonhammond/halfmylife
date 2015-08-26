@@ -12,6 +12,19 @@ body {
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #333;
 }
+.list {
+    padding-top: 12px;
+    background-color: white;
+    display: inline-block;
+    margin: 12px;
+    @apply(--shadow-elevation-2dp);
+}
+.short {
+    padding-top: 12px;
+}
+paper-button.colorful {
+    color: #4285f4;
+    }
 .CSSTable {
 	margin:0px;padding:0px;
 	width:100%;

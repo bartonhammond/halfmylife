@@ -10,7 +10,7 @@ window.addEventListener('WebComponentsReady', function() {
   // More info: https://visionmedia.github.io/page.js/
 
   //relative routing
-  //page.base('/halfmylife');
+//  page.base('halfmylife/');
   
   page('/', function () {
     app.route = 'home';
@@ -24,12 +24,13 @@ window.addEventListener('WebComponentsReady', function() {
     app.route = 'license';
   });
 
-  page('/contact', function () {
-    app.route = 'contact';
+  page('/about', function () {
+    app.route = 'about';
   });
-  
+
+
   // add #! before urls
-  page({
+  page.start({
     hashbang: true
   });
 

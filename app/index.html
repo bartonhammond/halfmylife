@@ -1,8 +1,8 @@
 <!doctype html>
 <!--
-    @license
-    Copyright (c) 2015 Barton Hammond . All rights reserved.
-  -->
+@license
+Copyright (c) 2015 Barton Hammond . All rights reserved.
+-->
 <html lang="">
 
   <head>
@@ -65,10 +65,10 @@
     <!-- endreplace-->
 
     <!-- relative routing
-         https://github.com/PolymerElements/polymer-starter-kit/issues/142
+    https://github.com/PolymerElements/polymer-starter-kit/issues/142
 
-         <base href="/halfmylife/">
-         -->
+    <base href="/halfmylife/">
+    -->
     
   </head>
 
@@ -102,9 +102,9 @@
               <span>License</span>
             </a>
 
-            <a data-route="contact" href="/contact">
-              <iron-icon icon="mail"></iron-icon>
-              <span>Contact</span>
+            <a data-route="about" href="/about">
+              <iron-icon icon="speaker-notes"></iron-icon>
+              <span>About</span>
             </a>
           </paper-menu>
         </paper-scroll-header-panel>
@@ -135,46 +135,54 @@
             <iron-pages attr-for-selected="data-route" selected="{{route}}">
 
               <section data-route="home">
+
                 <paper-material elevation="1">
+                  <h3>Watch the video to see how these questions are answered!</h3>
+                  <iframe width="560" height="315"
+                          src="https://www.youtube.com/embed/66lJvr8vusk"
+                          frameborder="0" allowfullscreen
+                          align="left"
+                          style="margin-right: 5px"></iframe>
+
                   <h3>Have you been with me Half My Life?</h3>
-                  <img style="margin-right:10px" src="images/boots.jpg" align="left">
-                  <p>Have you ever wondered if you've been with
-                    someone half your life? For example, have you been
-                    married to your spouse or have a significant other
-                    or best friend for half of your life? Or maybe you'd
-                    like to know the day when your child is half your age?
-                    What day would that half way point be?
+                  <p>
+                    For those with a long term relationship,
+                    HalfMyLife pin points the exact day when Half My
+                    Life occurs.  What a day to celebrate!
                   </p>
-                  <h3>Welcome to Half My Life</h3>
-                  <p>These questions can
-                    be answered by doing some gymnastics with calendars
-                    and dates.  But you don't have to pull out pencil
-                    and paper to figure this out!  Welcome to <bold>Half
-                      My Life</bold>
-                    - a simple way to answer the questions above.
+                  <br>
+
+                  <h3>When is the next milestone of my life?</h3>
+                  <p>
+                    For those early in their relationship, HalfMyLife
+                    provides intermediate milestones dates such as one
+                    tenth, or a third of my life, dates to look
+                    forward to celebrating.
                   </p>
-                  <h3>How do I use Half My Life?</h3>
+
+                </paper-material>
+                <paper-material elevation="1">
                   <img style="margin-left:10px" src="images/onthebeach.jpg" align="right">
-                  <p>To calculate the date in question, first select the
-                    menu option "Calculate". 
-                    There are two fields to
-                    complete, the first is your birthday - just enter
-                    the numbers representing your Month, Day and Year.
-                    The next field is the date when the relationship
-                    started.  It can be the date when you met your
-                    spouse or significant other.  It could be the date
-                    your child was born.
-                  </p>
-                  <p>Once you have the two dates entered, press the
-                    Calculate key and the key dates or milestones are
-                    shown, among them the 50%, or half your life
-                    milestone. Note that milestones are on multiples
-                    of 10% of your life.  It only reports dates
-                    that are potentially obtainable, namely those dates
-                    that are less then 100 after the significant date.
-                    occurred.
+                  <h3>Great - what do I do?</h3>
+
+                  <p>
+                    Just click the link below! Provide a couple of
+                    dates and you're good to go.  You'll also have the
+                    opportunity to add the milestone dates to the
+                    calendar of your choice!
+                    <paper-menu class="list" attr-for-selected="data-route" selected="{{route}}" on-iron-select="onMenuSelect">
+                      <a data-route="calculate" href="/calculate">
+                        <paper-button tabindex="0" raised
+                                      class="colorful custom">
+                          <iron-icon icon="schedule">
+                          </iron-icon>
+                          Calculate
+                        </paper-button>
+                      </a>
+                    </paper-menu>
                   </p>
                 </paper-material>
+
               </section>
 
               <section data-route="calculate">
@@ -215,9 +223,97 @@
                 </paper-material>
               </section>
 
-              <section data-route="contact">
+              <section data-route="about">
                 <paper-material elevation="1">
-                  <h2 class="paper-font-display2">Contact</h2>
+                  <h2 class="paper-font-display2">About</h2>
+                    <h4>The following Open Source technologies were
+                      utilized in building this web site:
+                    </h4>
+                    <div class="list short">
+                      <paper-icon-item>
+                        <iron-icon icon="check" item-icon></iron-icon>
+                       <a href="http://yeoman.io/">Yeoman -
+                       scaffolding for the web</a>
+                      </paper-icon-item>
+                      <br>
+                      <paper-icon-item>
+                        <iron-icon icon="check"
+                       item-icon></iron-icon>  <a href="https://github.com/yeoman/generator-polymer">Generator
+                       Polymer - Yeoman generator for Polymer</a>
+                      </paper-icon-item>
+                      <br>
+                      <paper-icon-item>
+                        <iron-icon icon="check" item-icon></iron-icon>
+                        <a href="https://www.polymer-project.org/1.0/">Polymer
+                        Project 1.0 - Google's
+                        interoperable web components</a>
+                      </paper-icon-item>
+                      <br>
+                      <paper-icon-item>
+                        <iron-icon icon="check"
+                        item-icon></iron-icon><a href="http://gulpjs.com/">Gulp
+                        - Automate
+                        the workflow</a>
+                      </paper-icon-item>
+                      <br>
+                      <paper-icon-item>
+                        <iron-icon icon="check"
+                        item-icon></iron-icon><a href="http://bower.io/">Bower
+                        - package manager for the web
+                        </a>
+                      </paper-icon-item>
+                      <br>
+                       <paper-icon-item>
+                        <iron-icon icon="check"
+                        item-icon></iron-icon><a href="http://jshint.com/">JSHint
+                        - Making
+                        your javascript code is clean.
+                        </a>
+                       </paper-icon-item>
+                       <br>
+                       <paper-icon-item>
+                         <iron-icon icon="check"
+                                    item-icon></iron-icon><a href="https://nodejs.org/">Node
+                                    - Blazing
+                                    fast Javascript interpretor
+                         </a>
+                       </paper-icon-item>
+                       <br>
+                       <paper-icon-item>
+                         <iron-icon icon="check"
+                                    item-icon></iron-icon><a href="https://www.npmjs.com">NPM
+                                    - Package
+                                    manager
+                         </a>
+                       </paper-icon-item>
+                       <br>
+                       <paper-icon-item>
+                         <iron-icon icon="check"
+                                    item-icon></iron-icon><a href="https://github.com/nvie/gitflow">GitFlow
+                                    - Git
+                                    work flow helper
+                         </a>
+                       </paper-icon-item>
+                       <br>
+                       <paper-icon-item>
+                         <iron-icon icon="check"
+                                    item-icon></iron-icon><a href="https://github.com">GitHub
+                                    - Source
+                                    code repository
+                         </a>
+                       </paper-icon-item>
+                       <br>
+                        <paper-icon-item>
+                         <iron-icon icon="check"
+                                    item-icon></iron-icon><a href="https://pages.github.com/">GitHub
+                                    Pages - website hosting service
+                                    for your projects
+                         </a>
+                      </paper-icon-item>
+
+                    </div>
+
+                  
                   <p>Any questions, email me, Barton Hammond, with barton at acclivyx dot com</p>
                 </paper-material>
               </section>
@@ -229,24 +325,24 @@
 
       <!-- Uncomment next block to enable Service Worker support (1/2) -->
       <!--
-          <paper-toast id="caching-complete"
-                       duration="6000"
-                       text="Caching complete! This app will work offline.">
-          </paper-toast>
+      <paper-toast id="caching-complete"
+                   duration="6000"
+                   text="Caching complete! This app will work offline.">
+      </paper-toast>
 
-          <platinum-sw-register auto-register
-                                clients-claim
-                                skip-waiting
-                                on-service-worker-installed="displayInstalledToast">
-            <platinum-sw-cache default-cache-strategy="networkFirst"
-                               precache-file="precache.json">
-            </platinum-sw-cache>
-          </platinum-sw-register>
-          -->
+      <platinum-sw-register auto-register
+                            clients-claim
+                            skip-waiting
+                            on-service-worker-installed="displayInstalledToast">
+        <platinum-sw-cache default-cache-strategy="networkFirst"
+                           precache-file="precache.json">
+        </platinum-sw-cache>
+      </platinum-sw-register>
+      -->
 
     </template>
     <script src="../bower_components/moment/moment.js"></script>
-    <!-- version 0.8 -->
+    <!-- version 0.9 -->
     <!-- build:js scripts/app.js -->
     <script src="scripts/app.js"></script>
     <!-- endbuild-->
